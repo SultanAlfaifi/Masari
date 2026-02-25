@@ -504,6 +504,10 @@ body {
     margin-top: 20px;
 }
 
+.section-wrapper-pdf {
+    page-break-inside: auto;
+}
+
 /* Tighter sections if many are added */
 .cv-section-title {
     font-size: 11pt;
@@ -513,10 +517,16 @@ body {
     padding-bottom: 2pt;
     margin-bottom: 8px;
     color: #000;
+    page-break-after: avoid;
+    break-after: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
 }
 
 .cv-item {
     margin-bottom: 8px;
+    page-break-inside: avoid;
+    break-inside: avoid;
 }
 
 .cv-row-1 {
@@ -958,18 +968,23 @@ body {
     .preview-modal-content {
         flex: 1;
         overflow-y: auto;
-        padding: 2rem 1rem;
-        display: flex;
-        justify-content: center;
+        padding: 0;
+        /* Remove padding */
+        display: block;
+        /* Direct block for natural scroll */
+        background: white;
+        /* Ensure consistent background */
     }
 
     .a4-wrapper {
         width: 100%;
         min-height: 100%;
         transform: none;
-        margin-bottom: 2rem;
-        box-shadow: var(--shadow-md);
-        padding: 1rem;
+        margin-bottom: 0;
+        box-shadow: none;
+        /* No shadow needed on mobile modal */
+        padding: 1.5rem;
+        /* Consistent internal padding */
     }
 
     .item-card {
@@ -978,5 +993,64 @@ body {
 
     .brand-title {
         font-size: 1.15rem;
+    }
+}
+
+/* ----------------- Native Printing (PDF Output) ----------------- */
+@media print {
+
+    /* Hide the UI entirely */
+    .top-announcement,
+    .header,
+    .sidebar,
+    .editor,
+    .mobile-action-bar,
+    .modal-header,
+    .date-picker-modal {
+        display: none !important;
+    }
+
+    /* Reset core structures */
+    body,
+    html {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Let the preview flow naturally over pages */
+    .layout,
+    .preview-panel,
+    .preview-modal,
+    .preview-modal-content {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        position: static !important;
+        background: white !important;
+    }
+
+    /* Format the document for exact A4 rendering */
+    #pdf-root {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        transform: none !important;
+        border: none !important;
+    }
+
+    .cv-document {
+        width: 100% !important;
+    }
+
+    /* Standard Page setup */
+    @page {
+        margin: 8mm 15mm 8mm 15mm;
+        /* Small top/bottom margin helps hide standard headers/footers in Chrome while keeping safe area */
+        size: A4 portrait;
     }
 }

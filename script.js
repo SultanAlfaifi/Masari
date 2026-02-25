@@ -422,20 +422,28 @@ document.getElementById('download-btn-desktop').addEventListener('click', downlo
 function downloadPDF() {
     const btnIconWrapper = document.getElementById('download-btn-desktop');
     const originalContent = btnIconWrapper.innerHTML;
-    btnIconWrapper.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-inline-end: 8px;"></i> جاري التصدير...';
+    btnIconWrapper.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-inline-end: 8px;"></i> تجهيز الطباعة...';
 
-    const element = document.getElementById('pdf-root');
-    const opt = {
-        margin: 0,
-        filename: `${resumeData.personal.name || 'CV'}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 3, useCORS: true },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
+    // Change the page title temporarily for a better downloaded PDF name
+    const originalTitle = document.title;
+    document.title = `${resumeData.personal.name || 'CV'} Resume`;
 
-    html2pdf().set(opt).from(element).save().then(() => {
+    // Trigger the native browser PDF/Print dialogue (This respects our CSS @media print rules perfectly)
+    setTimeout(() => {
+        window.print();
+
+        // Restore immediately after the print dialog opens/closes
+        document.title = originalTitle;
         btnIconWrapper.innerHTML = originalContent;
-    });
+
+        // Close the mobile modal if it was open so the user returns to the editor
+        const mobileModal = document.getElementById('mobilePreviewModal');
+        if (mobileModal.classList.contains('active')) {
+            mobileModal.classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('desktop-preview-container').appendChild(document.getElementById('pdf-root'));
+        }
+    }, 500);
 }
 
 /* --- Date Picker Logic --- */
