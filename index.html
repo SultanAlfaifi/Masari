@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>سيرتي | صانع السيرة الذاتية الاحترافي</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="top-announcement">
+        صُنع بشغف بواسطة <a href="https://www.linkedin.com/in/alfaifi-sultan/" target="_blank">سلطان الفيفي</a>
+    </div>
+    <header class="header">
+        <div class="brand">
+            <div class="brand-icon"><i class="fas fa-file-invoice"></i></div>
+            <h1 class="brand-title">سيرتي</h1>
+        </div>
+        <div class="header-actions">
+            <!-- Hidden on mobile, shown on desktop -->
+            <button class="btn btn-ghost" onclick="resetData()">
+                <i data-lucide="refresh-cw" style="width:16px;height:16px;"></i> تهيئة جديدة
+            </button>
+            <button class="btn btn-primary" id="download-btn-desktop">
+                <i data-lucide="download" style="width:16px;height:16px;"></i> تحميل الـ PDF
+            </button>
+        </div>
+    </header>
+
+    <div class="layout">
+        <!-- Native Bottom Tab Bar on Mobile / Sidebar on Desktop -->
+        <nav class="sidebar">
+            <div class="nav-item active" onclick="showSection(1)" id="nav-sec-1">
+                <i data-lucide="user"></i> <span class="nav-text">الرئيسية</span>
+            </div>
+            <div class="nav-item" onclick="showSection(2)" id="nav-sec-2">
+                <i data-lucide="terminal"></i> <span class="nav-text">المهارات</span>
+            </div>
+            <div class="nav-item" onclick="showSection(3)" id="nav-sec-3">
+                <i data-lucide="layout"></i> <span class="nav-text">المشاريع</span>
+            </div>
+            <div class="nav-item" onclick="showSection(4)" id="nav-sec-4">
+                <i data-lucide="briefcase"></i> <span class="nav-text">الخبرات</span>
+            </div>
+            <div class="nav-item" onclick="showSection(5)" id="nav-sec-5">
+                <i data-lucide="graduation-cap"></i> <span class="nav-text">التعليم</span>
+            </div>
+            <div class="nav-item" onclick="showSection(6)" id="nav-sec-6">
+                <i data-lucide="award"></i> <span class="nav-text">الشهادات</span>
+            </div>
+            <div class="nav-item" onclick="showSection(7)" id="nav-sec-7">
+                <i data-lucide="star"></i> <span class="nav-text">الجوائز</span>
+            </div>
+            <div class="nav-item" onclick="showSection(8)" id="nav-sec-8">
+                <i data-lucide="heart-handshake"></i> <span class="nav-text">التطوع</span>
+            </div>
+        </nav>
+
+        <main class="editor" id="main-editor">
+            <!-- SECTION 1: Personal -->
+            <div class="section-wrapper active" id="sec-1">
+                <div class="section-header">
+                    <h2>البيانات الشخصية</h2>
+                    <p>معلومات الاتصال الأساسية التي تمنح أصحاب العمل وسيلة للوصول إليك بسرعة.</p>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group col-span-2">
+                        <label class="form-label">الاسم الكامل (الإنجليزي أفضل)</label>
+                        <input type="text" class="form-input" id="in-name" style="direction: ltr;"
+                            oninput="saveAndRefresh()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">البريد الإلكتروني</label>
+                        <input type="email" class="form-input" id="in-email" style="direction: ltr;"
+                            oninput="saveAndRefresh()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">رقم الجوال</label>
+                        <input type="text" class="form-input" id="in-phone" style="direction: ltr;"
+                            oninput="saveAndRefresh()">
+                    </div>
+                    <div class="form-group" style="position: relative;">
+                        <label class="form-label">
+                            منصة تواصل <span style="font-size: 0.7rem; color: var(--accent); font-weight: 500;">(نتعرف
+                                على الرابط بذكاء 🤖)</span>
+                        </label>
+                        <div style="position: relative; display: flex; align-items: center;">
+                            <input type="text" class="form-input" id="in-social" style="direction: ltr;"
+                                placeholder="https://linkedin.com/..." oninput="handleSocialInput(this.value)">
+                            <div id="social-icon-box"
+                                style="position: absolute; right: auto; left: 12px; font-size: 1.25rem;">
+                                <i class="fas fa-link" style="color:var(--text-muted); opacity:0.5;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">المدينة، الدولة</label>
+                        <input type="text" class="form-input" id="in-location" style="direction: ltr;"
+                            placeholder="Riyadh, KSA" oninput="saveAndRefresh()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: Skills -->
+            <div class="section-wrapper" id="sec-2">
+                <div class="section-header">
+                    <h2>المهارات والفئات</h2>
+                    <p>أضف تصنيفات لمهاراتك (لغات برمجة، شهادات، أطر عمل، مهارات ناعمة).</p>
+                </div>
+
+                <div style="margin-bottom: 2rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <span style="font-size: 0.85rem; color: var(--text-muted); padding-top: 4px;">إضافة سريعة:</span>
+                    <button class="btn-chip" onclick="addSkillSuggestion('Languages')">+ لغات البرمجة</button>
+                    <button class="btn-chip" onclick="addSkillSuggestion('Tools & Frameworks')">+ الإطارات
+                        والأدوات</button>
+                    <button class="btn-chip" onclick="addSkillSuggestion('Soft Skills')">+ المهارات الناعمة</button>
+                </div>
+
+                <div id="skills-list">
+                    <!-- Dynamic Skills Form injected here -->
+                </div>
+
+                <button class="btn-outline" style="margin-top: 1rem;" onclick="addSkillObj()">
+                    <i data-lucide="plus"></i> إضافة فئة مهارات جديدة
+                </button>
+            </div>
+
+            <!-- SECTION 3: Projects -->
+            <div class="section-wrapper" id="sec-3">
+                <div class="section-header">
+                    <h2>المشاريع النوعية</h2>
+                    <p>أبرز التطبيقات والأنظمة التي قمت ببنائها للتأكيد على قدراتك العملية.</p>
+                </div>
+                <div id="project-list"></div>
+                <button class="btn-outline" onclick="addProject()">
+                    <i data-lucide="plus"></i> إضافة مشروع جديد
+                </button>
+            </div>
+
+            <!-- SECTION 4: Experience -->
+            <div class="section-wrapper" id="sec-4">
+                <div class="section-header">
+                    <h2>الخبرات المهنية</h2>
+                    <p>استعرض مسيرتك الوظيفية وأهم الإنجازات التي حققتها في كل منصب.</p>
+                </div>
+                <div id="experience-list"></div>
+                <button class="btn-outline" onclick="addExperience()">
+                    <i data-lucide="plus"></i> إضافة خبرة جديدة
+                </button>
+            </div>
+
+            <!-- SECTION 5: Education -->
+            <div class="section-wrapper" id="sec-5">
+                <div class="section-header">
+                    <h2>المؤهلات التعليمية</h2>
+                    <p>سجلك الأكاديمي، التخصص، وتاريخ التخرج والمؤسسة التعليمية.</p>
+                </div>
+                <div id="education-list"></div>
+                <button class="btn-outline" onclick="addEducation()">
+                    <i data-lucide="plus"></i> إضافة مؤهل جديد
+                </button>
+            </div>
+
+            <!-- SECTION 6: Certifications -->
+            <div class="section-wrapper" id="sec-6">
+                <div class="section-header">
+                    <h2>الشهادات المهنية</h2>
+                    <p>أضف الشهادات الاحترافية التي حصلت عليها لتثبت تخصصك.</p>
+                </div>
+                <div id="certification-list"></div>
+                <button class="btn-outline" onclick="addCertification()">
+                    <i data-lucide="plus"></i> إضافة شهادة جديدة
+                </button>
+            </div>
+
+            <!-- SECTION 7: Awards -->
+            <div class="section-wrapper" id="sec-7">
+                <div class="section-header">
+                    <h2>الجوائز والإنجازات</h2>
+                    <p>هل حققت مركزاً متقدماً أو فزت بمسابقة؟ اذكرها هنا لتميز سيرتك.</p>
+                </div>
+                <div id="award-list"></div>
+                <button class="btn-outline" onclick="addAward()">
+                    <i data-lucide="plus"></i> إضافة جائزة جديدة
+                </button>
+            </div>
+
+            <!-- SECTION 8: Volunteering -->
+            <div class="section-wrapper" id="sec-8">
+                <div class="section-header">
+                    <h2>الأعمال التطوعية</h2>
+                    <p>مساهماتك المجتمعية تظهر روح المبادرة والتعاون لديك.</p>
+                </div>
+                <div id="volunteering-list"></div>
+                <button class="btn-outline" onclick="addVolunteering()">
+                    <i data-lucide="plus"></i> إضافة عمل تطوعي
+                </button>
+            </div>
+        </main>
+
+        <!-- Desktop Preview -->
+        <aside class="preview-panel" id="desktop-preview-container"></aside>
+    </div>
+
+    <!-- Mobile Floating Action Button -->
+    <div class="mobile-action-bar">
+        <button class="btn-mobile-preview" onclick="toggleMobileModal()">
+            <i data-lucide="file-text"></i>
+        </button>
+    </div>
+
+    <!-- Mobile PDF Modal -->
+    <div class="preview-modal" id="mobilePreviewModal">
+        <div class="modal-header">
+            <button class="btn-close-modal" onclick="toggleMobileModal()">إلغاء</button>
+            <span>المعاينة النهائية</span>
+            <button class="btn-download-modal" onclick="downloadPDF()"><i data-lucide="download"
+                    style="width:16px;"></i> تحميل</button>
+        </div>
+        <div class="preview-modal-content" id="mobile-preview-container">
+            <!-- Rendered Here -->
+        </div>
+    </div>
+
+    <!-- HIDDEN TEMPLATE (MASTER - ORDERED EXACTLY AS REQUESTED) -->
+    <div style="display:none;" id="cv-master-template">
+        <div class="a4-wrapper" id="pdf-root">
+            <div class="cv-document">
+                <div class="cv-header-center">
+                    <div class="cv-name" id="cv-name"></div>
+                    <div class="cv-contact">
+                        <span id="c-icon-phone" style="display:none;"><i class="fas fa-phone-alt cv-icon"></i> <span
+                                id="cv-phone" class="mono"></span></span>
+                        <span id="c-sep-1" class="cv-sep" style="display:none;">|</span>
+                        <span id="c-icon-email" style="display:none;"><i class="fas fa-envelope cv-icon"></i> <span
+                                id="cv-email" class="mono"></span></span>
+                        <span id="c-sep-2" class="cv-sep" style="display:none;">|</span>
+                        <span id="c-icon-social" style="display:none;"><i id="cv-social-icon"
+                                class="fas fa-link cv-icon"></i> <span id="cv-social" class="mono"></span></span>
+                        <span id="c-sep-3" class="cv-sep" style="display:none;">|</span>
+                        <span id="c-icon-loc" style="display:none;"><i class="fas fa-map-marker-alt cv-icon"></i> <span
+                                id="cv-location" class="mono"></span></span>
+                    </div>
+                </div>
+
+                <div class="cv-section" id="v-skills" style="display:none;">
+                    <div class="cv-section-title">SKILLS</div>
+                    <div id="v-skills-items"></div>
+                </div>
+
+                <div class="cv-section" id="v-proj" style="display:none;">
+                    <div class="cv-section-title">PROJECTS</div>
+                    <div id="v-project-items"></div>
+                </div>
+
+                <div class="cv-section" id="v-exp" style="display:none;">
+                    <div class="cv-section-title">EXPERIENCE</div>
+                    <div id="v-experience-items"></div>
+                </div>
+
+                <div class="cv-section" id="v-edu" style="display:none;">
+                    <div class="cv-section-title">EDUCATION</div>
+                    <div id="v-education-items"></div>
+                </div>
+
+                <div class="cv-section" id="v-cert" style="display:none;">
+                    <div class="cv-section-title">CERTIFICATIONS</div>
+                    <div id="v-certification-items"></div>
+                </div>
+
+                <div class="cv-section" id="v-award" style="display:none;">
+                    <div class="cv-section-title">AWARDS & HONORS</div>
+                    <div id="v-award-items"></div>
+                </div>
+
+                <div class="cv-section" id="v-vol" style="display:none;">
+                    <div class="cv-section-title">VOLUNTEERING</div>
+                    <div id="v-volunteering-items"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Date Picker UI -->
+    <div class="date-picker-modal" id="datePickerModal">
+        <div class="date-picker-content">
+            <div class="dp-header">
+                <h3>تحديد التاريخ</h3>
+                <button class="btn-close-dp" onclick="closeDatePicker()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="dp-tabs">
+                <button class="dp-tab active" id="tab-gregorian" onclick="setCalType('gregorian')">ميلادي</button>
+                <button class="dp-tab" id="tab-hijri" onclick="setCalType('hijri')">هجري</button>
+            </div>
+
+            <div class="dp-body">
+                <div class="dp-section">
+                    <h4>من (Start)</h4>
+                    <div class="dp-row">
+                        <select id="dp-start-month" class="dp-select"></select>
+                        <select id="dp-start-year" class="dp-select"></select>
+                    </div>
+                </div>
+                <div class="dp-section">
+                    <h4>إلى (End)</h4>
+                    <div class="dp-row-labels">
+                        <label><input type="radio" name="dp_end_type" value="range" checked
+                                onchange="toggleEndPicker()"> فترة محددة</label>
+                        <label><input type="radio" name="dp_end_type" value="present" onchange="toggleEndPicker()"> حتى
+                            الآن</label>
+                        <label><input type="radio" name="dp_end_type" value="single" onchange="toggleEndPicker()"> تاريخ
+                            واحد فقط</label>
+                    </div>
+                    <div class="dp-row" id="dp-end-group">
+                        <select id="dp-end-month" class="dp-select"></select>
+                        <select id="dp-end-year" class="dp-select"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <button class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.85rem;"
+                    onclick="saveDateSelection()">تأكيد التاريخ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+
+</html>
