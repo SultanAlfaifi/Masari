@@ -880,6 +880,15 @@ body {
     }
 
     .header-actions {
+        display: flex;
+        gap: 0.25rem;
+    }
+
+    .header-actions .btn {
+        padding: 0.5rem;
+    }
+
+    .action-text {
         display: none;
     }
 

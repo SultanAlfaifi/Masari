@@ -27,16 +27,19 @@
             <h1 class="brand-title">سيرتي</h1>
         </div>
         <div class="header-actions">
-            <!-- Hidden on mobile, shown on desktop -->
+            <!-- Action buttons always shown, text hidden on mobile -->
             <button class="btn btn-ghost" onclick="confirmClearDataModal()"
                 style="color: #ef4444; background: rgba(239, 68, 68, 0.1);">
-                <i data-lucide="trash-2" style="width:16px;height:16px;"></i> إفراغ الحقول
+                <i data-lucide="trash-2" style="width:16px;height:16px;"></i> <span class="action-text">إفراغ
+                    الحقول</span>
             </button>
             <button class="btn btn-ghost" onclick="resetData()">
-                <i data-lucide="refresh-cw" style="width:16px;height:16px;"></i> ملء تجريبي
+                <i data-lucide="refresh-cw" style="width:16px;height:16px;"></i> <span class="action-text">ملء
+                    تجريبي</span>
             </button>
             <button class="btn btn-primary" id="download-btn-desktop" onclick="downloadPDF(event)">
-                <i data-lucide="download" style="width:16px;height:16px;"></i> تحميل الـ PDF
+                <i data-lucide="download" style="width:16px;height:16px;"></i> <span class="action-text">تحميل الـ
+                    PDF</span>
             </button>
         </div>
     </header>
