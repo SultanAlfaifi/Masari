@@ -18,7 +18,21 @@ Masari (Arabic for "My Path") is a premium, privacy-first web application design
 - **🖋️ Custom Typography**: Beautifully integrated with **Alexandria** (Arabic) and **Inter** (English) fonts.
 - **💡 Smart Link System**: Automatically detects and formats social links (LinkedIn, GitHub, Twitter/X, etc.).
 
-### 🛠️ Technical Stack
+---
+
+## 📸 Preview
+
+### 🖥️ Editor Interface
+![Editor](assets/editor.png)
+
+### � Mobile View
+![Mobile](assets/mobile.png)
+
+### 📄 Generated PDF
+![PDF](assets/pdf.png)
+
+
+### �🛠️ Technical Stack
 
 - **Frontend**: Vanilla HTML5, CSS3 (Custom Design System), and JavaScript (ES6+).
 - **Icons**: [Lucide Icons](https://lucide.dev/) & [FontAwesome](https://fontawesome.com/).
@@ -65,6 +79,20 @@ If you want to modify fonts or add new assets to the PDF virtual filesystem:
 - **📄 تصدير PDF عالي الجودة**: يستخدم `pdfmake` لتوليد ملفات PDF حادة وعالية الدقة مع تضمين الخطوط المخصصة.
 - **🖋️ خطوط مخصصة**: متكامل تماماً مع خطي **Alexandria** (للعربي) و **Inter** (للإنجليزي).
 - **💡 نظام روابط ذكي**: يكتشف وينسق روابط التواصل الاجتماعي تلقائياً (LinkedIn, GitHub, Twitter/X, إلخ).
+
+---
+
+## 📸 نظرة عامة (Preview)
+
+### 🖥️ واجهة المحرر (Editor Interface)
+![Editor](assets/editor.png)
+
+### 📱 عرض الجوال (Mobile View)
+![Mobile](assets/mobile.png)
+
+### 📄 ملف الـ PDF الناتج (Generated PDF)
+![PDF](assets/pdf.png)
+
 
 ### 🛠️ التقنيات المستخدمة
 
