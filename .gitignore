@@ -15,4 +15,5 @@ yarn-debug.log*
 yarn-error.log*
 
 # PDF generation (vfs_fonts.js is usually big, but keeping it for static site deployment)
+# Comment out if you want to exclude it from repo
 # vfs_fonts.js

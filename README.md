@@ -117,7 +117,7 @@ If you want to modify fonts or add new assets to the PDF virtual filesystem:
 ---
 
 ### 👨‍💻 Developed By
-**Sultan AlFifi | سلطان الفيفي**
+**Sultan AlFaifi | سلطان الفيفي**
 [LinkedIn Profile](https://www.linkedin.com/in/alfaifi-sultan/)
 
 ---
