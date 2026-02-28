@@ -58,6 +58,9 @@
             <div class="nav-item active" onclick="showSection(1)" id="nav-sec-1">
                 <i data-lucide="user"></i> <span class="nav-text">الرئيسية</span>
             </div>
+            <div class="nav-item" onclick="showSection(9)" id="nav-sec-9">
+                <i data-lucide="file-text"></i> <span class="nav-text">نبذة</span>
+            </div>
             <div class="nav-item" onclick="showSection(2)" id="nav-sec-2">
                 <i data-lucide="terminal"></i> <span class="nav-text">المهارات</span>
             </div>
@@ -85,15 +88,30 @@
         <main class="editor" id="main-editor">
             <!-- SECTION 1: Personal -->
             <div class="section-wrapper active" id="sec-1">
+                <div class="elegant-warning">
+                    <div class="warning-icon">
+                        <i data-lucide="alert-circle"></i>
+                    </div>
+                    <div class="warning-content">
+                        <strong>تنبيه:</strong> نعتذر منك، الموقع حالياً <u>لا يدعم اللغة العربية</u> في تصميم السيرة
+                        الذاتية الـ PDF. يُرجى إدخال بياناتك باللغة الإنجليزية فقط للحصول على أفضل نتيجة.
+                    </div>
+                </div>
                 <div class="section-header">
                     <h2>البيانات الشخصية</h2>
                     <p>معلومات الاتصال الأساسية التي تمنح أصحاب العمل وسيلة للوصول إليك بسرعة.</p>
                 </div>
                 <div class="form-grid">
                     <div class="form-group col-span-2">
-                        <label class="form-label">الاسم الكامل (الإنجليزي أفضل)</label>
+                        <label class="form-label">الاسم الكامل</label>
                         <input type="text" class="form-input" id="in-name" style="direction: ltr;"
                             placeholder="مثال: Sultan AlFifi" oninput="saveAndRefresh()">
+                    </div>
+                    <div class="form-group col-span-2">
+                        <label class="form-label">مميز (Highlights) - اختياري</label>
+                        <input type="text" class="form-input" id="in-highlights" style="direction: ltr;"
+                            placeholder="مثال: KAUST AI Program | McKinsey Forward Fellow | SCE Member"
+                            oninput="saveAndRefresh()">
                     </div>
                     <div class="form-group">
                         <label class="form-label">البريد الإلكتروني</label>
@@ -103,7 +121,8 @@
                     <div class="form-group">
                         <label class="form-label">رقم الجوال</label>
                         <input type="text" class="form-input" id="in-phone" style="direction: ltr;"
-                            placeholder="مثال: +966 50 123 4567" oninput="saveAndRefresh()">
+                            placeholder="مثال: +966 50 399 0106" oninput="saveAndRefresh()"
+                            onblur="formatPhoneField(this)">
                     </div>
                     <div class="form-group" style="position: relative;">
                         <label class="form-label">
@@ -125,6 +144,21 @@
                         <input type="text" class="form-input" id="in-location" style="direction: ltr;"
                             placeholder="مثال: Makkah, KSA" oninput="saveAndRefresh()">
                     </div>
+                </div>
+            </div>
+
+            <!-- SECTION 9: Summary -->
+            <div class="section-wrapper" id="sec-9">
+                <div class="section-header">
+                    <h2>نبذة (Summary)</h2>
+                    <p>نبذة مختصرة تسلط الضوء على أبرز مهاراتك وأهدافك المهنية.</p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">نبذة (Summary)</label>
+                    <textarea class="form-input form-textarea" id="in-summary"
+                        style="direction: ltr; min-height: 120px;"
+                        placeholder="مثال: A highly motivated software engineer with 5 years of experience..."
+                        oninput="saveAndRefresh()"></textarea>
                 </div>
             </div>
 
@@ -276,6 +310,7 @@
             <div class="cv-document">
                 <div class="cv-header-center">
                     <div class="cv-name" id="cv-name"></div>
+                    <div class="cv-highlights" id="cv-highlights"></div>
                     <div class="cv-contact">
                         <span id="c-icon-phone" style="display:none;"><i class="fas fa-phone-alt cv-icon"></i> <span
                                 id="cv-phone" class="mono"></span></span>
@@ -288,6 +323,13 @@
                         <span id="c-sep-3" class="cv-sep" style="display:none;">|</span>
                         <span id="c-icon-loc" style="display:none;"><i class="fas fa-map-marker-alt cv-icon"></i> <span
                                 id="cv-location" class="mono"></span></span>
+                    </div>
+                </div>
+
+                <div class="cv-section" id="v-summary" style="display:none;">
+                    <div class="section-wrapper-pdf">
+                        <div class="cv-section-title">SUMMARY</div>
+                        <div id="v-summary-items" style="font-size:9.5pt;margin-bottom:4px;color:#333;"></div>
                     </div>
                 </div>
 
