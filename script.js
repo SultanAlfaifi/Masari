@@ -724,7 +724,7 @@ function downloadPDF(event) {
                 pageMargins: [35, 35, 35, 35],
                 defaultStyle: { font: 'Inter', color: '#1a1a1a', lineHeight: 1.2 },
                 styles: {
-                    name: { font: 'InterBlack', fontSize: 26, alignment: 'center', margin: [0, 0, 0, 8], color: '#000000', characterSpacing: 0 },
+                    name: { font: 'InterBlack', fontSize: 26, alignment: 'center', margin: [0, 0, 0, -1], color: '#000000', characterSpacing: 0 },
                     contact: { fontSize: 8.5, alignment: 'center', color: '#1a1a1a', margin: [0, 0, 0, 6] },
                     contactLink: { fontSize: 8.5, color: '#1a1a1a' },
                     sectionTitle: { fontSize: 11.5, bold: true, margin: [0, 6, 0, 2], color: '#000000', characterSpacing: 0.5 },

@@ -706,24 +706,25 @@ select {
 }
 
 .cv-name {
-    font-size: 24pt;
+    font-size: 26pt;
     font-weight: 800;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
     letter-spacing: -0.5pt;
     color: #000;
+    line-height: 1.2;
 }
 
 .cv-highlights {
-    font-size: 10.5pt;
+    font-size: 11.5pt;
     font-weight: 600;
     color: #444;
-    margin-top: 0;
+    margin-top: 4px;
     margin-bottom: 8px;
     text-align: center;
 }
 
 .cv-contact {
-    font-size: 9.5pt;
+    font-size: 10.5pt;
     display: flex;
     justify-content: center;
     gap: 8px;
@@ -732,7 +733,7 @@ select {
 }
 
 .cv-icon {
-    font-size: 9pt;
+    font-size: 10pt;
     color: #555;
 }
 
@@ -751,7 +752,7 @@ select {
 
 /* Tighter sections if many are added */
 .cv-section-title {
-    font-size: 11pt;
+    font-size: 12.5pt;
     font-weight: 700;
     text-transform: uppercase;
     border-bottom: 2pt solid #ddd;
@@ -774,7 +775,7 @@ select {
     display: flex;
     justify-content: space-between;
     font-weight: 700;
-    font-size: 10.5pt;
+    font-size: 11.5pt;
     margin-bottom: 1px;
     color: #111;
 }
@@ -782,13 +783,13 @@ select {
 .cv-date {
     font-weight: 400;
     color: #444;
-    font-size: 10pt;
+    font-size: 10.5pt;
 }
 
 .cv-row-2 {
     display: flex;
     justify-content: space-between;
-    font-size: 9.5pt;
+    font-size: 10.5pt;
     margin-bottom: 4px;
     color: #444;
 }
@@ -799,7 +800,7 @@ select {
 
 .cv-bullets {
     margin-left: 20px;
-    font-size: 9.5pt;
+    font-size: 10.5pt;
     color: #222;
 }
 
