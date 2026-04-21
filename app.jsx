@@ -467,14 +467,17 @@ function App() {
       }
     };
 
-    try {
-      pdfMake.createPdf(docDef).download(`${d.name || 'resume'}_CV.pdf`);
-    } catch(err) {
-      console.error(err);
-      const fallback = { ...docDef };
-      fallback.defaultStyle = { fontSize: 10.5, color: '#111' };
-      pdfMake.createPdf(fallback).download(`${d.name || 'resume'}_CV.pdf`);
-    }
+    // إعطاء المتصفح مهلة 150 ملي ثانية لمعالجة إرسال الإحصائيات (gtag) قبل تجميد المتصفح لصناعة الـ PDF
+    setTimeout(() => {
+      try {
+        pdfMake.createPdf(docDef).download(`${d.name || 'resume'}_CV.pdf`);
+      } catch(err) {
+        console.error(err);
+        const fallback = { ...docDef };
+        fallback.defaultStyle = { fontSize: 10.5, color: '#111' };
+        pdfMake.createPdf(fallback).download(`${d.name || 'resume'}_CV.pdf`);
+      }
+    }, 150);
   };
 
   const CV = { classic: CVClassic, modern: CVModern, minimal: CVMinimal }[template] || CVModern;
