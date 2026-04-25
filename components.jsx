@@ -182,11 +182,25 @@ function MobileTabBar({ sections, current, onSelect, onOpenSections }) {
 }
 
 /* Mobile sections sheet */
-function MobileSectionsSheet({ open, sections, current, counts, onSelect, onClose, onMove, onReorder, onOpenGuide, onClear, onDemo }) {
+function MobileSectionsSheet({ open, sections, current, counts, onSelect, onClose, onMove, onReorder, onResetOrder, onOpenGuide, onClear, onDemo }) {
   const [dragId, setDragId] = useState(null);
   const [overId, setOverId] = useState(null);
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (open) setIsClosing(false);
+  }, [open]);
 
   if (!open) return null;
+
+  const closeWithAnimation = (after) => {
+    setIsClosing(true);
+    setTimeout(() => {
+      if (after) after();
+      onClose();
+      setIsClosing(false);
+    }, 240);
+  };
 
   const handleDragStart = (e, id, isPinned) => {
     if (isPinned) { e.preventDefault(); return; }
@@ -209,16 +223,19 @@ function MobileSectionsSheet({ open, sections, current, counts, onSelect, onClos
   const handleDragEnd = () => { setDragId(null); setOverId(null); };
 
   return (
-    <div className="m-sheet-backdrop" onClick={onClose}>
-      <div className="m-sheet" onClick={e => e.stopPropagation()}>
+    <div className={"m-sheet-backdrop" + (isClosing ? " closing" : "")} onClick={() => closeWithAnimation()}>
+      <div className={"m-sheet" + (isClosing ? " closing" : "")} onClick={e => e.stopPropagation()}>
         <div className="m-sheet-handle"/>
         <div className="m-sheet-header">
           <div className="t">الأقسام</div>
-          <button className="m-sheet-close" onClick={onClose}><Icon name="x"/></button>
+          <div className="m-sheet-header-actions">
+            <button className="m-sheet-reset" onClick={onResetOrder}><Icon name="refresh"/> إعادة الترتيب</button>
+            <button className="m-sheet-close" onClick={() => closeWithAnimation()}><Icon name="x"/></button>
+          </div>
         </div>
-        <div className="m-sheet-hint">اضغط للفتح • اسحب القسم من الجانب لإعادة الترتيب</div>
+        <div className="m-sheet-hint">اضغط للفتح، واستخدم الأسهم لتغيير ترتيب الأقسام.</div>
         <div className="m-sheet-list">
-          {sections.map((s) => {
+          {sections.map((s, idx) => {
             const isPinned = s.pinned;
             return (
               <div key={s.id} 
@@ -229,7 +246,7 @@ function MobileSectionsSheet({ open, sections, current, counts, onSelect, onClos
                      (dragId === s.id ? " dragging" : "") +
                      (overId === s.id ? " drag-over" : "")
                    }
-                   onClick={() => { onSelect(s.id); onClose(); }}
+                   onClick={() => { onSelect(s.id); closeWithAnimation(); }}
                    draggable={!isPinned}
                    onDragStart={e => handleDragStart(e, s.id, isPinned)}
                    onDragOver={e => handleDragOver(e, s.id, isPinned)}
@@ -237,8 +254,12 @@ function MobileSectionsSheet({ open, sections, current, counts, onSelect, onClos
                    onDrop={e => handleDrop(e, s.id, isPinned)}
                    onDragEnd={handleDragEnd}>
                 
-                {/* Visual drag handle proxy instead of arrows */}
-                {!isPinned && <div className="m-sheet-drag-handle" style={{opacity: 0.3}}><Icon name="grip" width="16" height="16"/></div>}
+                {!isPinned && (
+                  <div className="m-sheet-order-controls" onClick={e => e.stopPropagation()}>
+                    <button onClick={() => onMove(s.id, -1)} disabled={idx <= 1} title="تحريك لأعلى"><Icon name="chevronUp"/></button>
+                    <button onClick={() => onMove(s.id, 1)} disabled={idx >= sections.length - 1} title="تحريك لأسفل"><Icon name="chevronDown"/></button>
+                  </div>
+                )}
                 
                 <Icon name={s.icon} className="m-sheet-icon" style={!isPinned ? {marginLeft: 8} : {}}/>
                 <div className="m-sheet-row-main">
@@ -251,7 +272,7 @@ function MobileSectionsSheet({ open, sections, current, counts, onSelect, onClos
           })}
         </div>
         <div className="m-sheet-guide">
-          <button className="guide-btn" onClick={onOpenGuide}>
+          <button className="guide-btn" onClick={() => closeWithAnimation(onOpenGuide)}>
             <div className="guide-btn-icon"><Icon name="star"/></div>
             <div className="guide-btn-text">
               <div className="gb-title">الدليل الشامل</div>

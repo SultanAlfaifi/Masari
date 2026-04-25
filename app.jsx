@@ -532,22 +532,21 @@ function App() {
             <p className="editor-sub">{sectionSub[current]}</p>
 
             {Section && <Section data={data} setData={setData}/>}
-
-            <div className="editor-stepper">
-              <button className="stepper-btn" onClick={prev} disabled={idx === 0}>
-                <Icon name="chevronR"/> السابق
+          </div>
+          <div className="editor-stepper">
+            <button className="stepper-btn" onClick={prev} disabled={idx === 0}>
+              <Icon name="chevronR"/> السابق
+            </button>
+            <span style={{fontSize:12,color:"var(--text-3)"}} className="desktop-only">{currentMeta?.label}</span>
+            {idx < orderedSections.length - 1 ? (
+              <button className="stepper-btn primary" onClick={next}>
+                التالي <Icon name="chevronL"/>
               </button>
-              <span style={{fontSize:12,color:"var(--text-3)"}} className="desktop-only">{currentMeta?.label}</span>
-              {idx < orderedSections.length - 1 ? (
-                <button className="stepper-btn primary" onClick={next}>
-                  التالي <Icon name="chevronL"/>
-                </button>
-              ) : (
-                <button className="stepper-btn primary" onClick={onDownload}>
-                  <Icon name="download"/> تحميل PDF
-                </button>
-              )}
-            </div>
+            ) : (
+              <button className="stepper-btn primary" onClick={onDownload}>
+                <Icon name="download"/> تحميل PDF
+              </button>
+            )}
           </div>
         </main>
 
@@ -624,6 +623,7 @@ function App() {
                            sections={orderedSections} current={current} counts={counts}
                            onSelect={setCurrent} onClose={() => setMobileSheet(false)}
                            onMove={moveSection} onReorder={reorderSections}
+                           onResetOrder={resetOrder}
                            onOpenGuide={() => { 
                              setMobileSheet(false); 
                              setShowGuide(true); 
@@ -766,22 +766,101 @@ function GuideOverlay({ onClose }) {
 
 /* Mobile preview — auto-fits the A4 to viewport width */
 function MobilePreview({ data, template, setTemplate, cvSize, setCvSize, cvSpacing, setCvSpacing, CV, sectionOrder, onClose, onDownload }) {
-  const [scale, setScale] = useState(0.5);
+  const [fitScale, setFitScale] = useState(0.5);
+  const [userZoom, setUserZoom] = useState(1);
   const [activeTab, setActiveTab] = useState("template"); // template, size, spacing
+  const [closing, setClosing] = useState(false);
   const scrollRef = useRef(null);
+  const pinchRef = useRef(null);
 
   useEffect(() => {
     const compute = () => {
       const sw = scrollRef.current?.clientWidth || window.innerWidth;
-      const pad = 24; // 12px each side
-      const available = sw - pad;
+      const sh = scrollRef.current?.clientHeight || window.innerHeight;
+      const pad = 24;
+      const availableW = sw - pad;
+      const availableH = sh - pad;
       const A4_WIDTH = 794; // px @ 96dpi
-      setScale(Math.min(1.1, Math.max(0.3, available / A4_WIDTH)));
+      const A4_HEIGHT = 1123;
+      const fitScale = Math.min(availableW / A4_WIDTH, availableH / A4_HEIGHT) * 0.98;
+      const mobileCap = window.innerWidth <= 480 ? 0.28 : 1;
+      setFitScale(Math.min(mobileCap, 1, Math.max(0.2, fitScale)));
     };
-    compute();
+    const raf = requestAnimationFrame(compute);
+    const timer = setTimeout(compute, 80);
+    const ro = scrollRef.current && "ResizeObserver" in window ? new ResizeObserver(compute) : null;
+    if (ro && scrollRef.current) ro.observe(scrollRef.current);
     window.addEventListener("resize", compute);
-    return () => window.removeEventListener("resize", compute);
-  }, []);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timer);
+      ro?.disconnect();
+      window.removeEventListener("resize", compute);
+    };
+  }, [activeTab]);
+
+  const scale = fitScale * userZoom;
+  const clampZoom = (v) => Math.min(3.2, Math.max(1, v));
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    requestAnimationFrame(() => {
+      el.scrollLeft = Math.max(0, (el.scrollWidth - el.clientWidth) / 2);
+    });
+  }, [scale]);
+  const touchDistance = (touches) => {
+    const [a, b] = touches;
+    return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+  };
+  const handlePreviewTouchStart = (e) => {
+    if (e.touches.length === 2) {
+      pinchRef.current = {
+        distance: touchDistance(e.touches),
+        zoom: userZoom,
+      };
+    }
+  };
+  const handlePreviewTouchMove = (e) => {
+    if (e.touches.length !== 2 || !pinchRef.current) return;
+    e.preventDefault();
+    const next = pinchRef.current.zoom * (touchDistance(e.touches) / pinchRef.current.distance);
+    setUserZoom(clampZoom(next));
+  };
+  const handlePreviewTouchEnd = () => {
+    if (pinchRef.current) pinchRef.current = null;
+  };
+  const zoomBy = (delta) => setUserZoom(z => clampZoom(z + delta));
+  const resetZoom = () => setUserZoom(1);
+  const handlePreviewWheel = (e) => {
+    if (!e.ctrlKey) return;
+    e.preventDefault();
+    zoomBy(e.deltaY < 0 ? 0.12 : -0.12);
+  };
+  const closePreview = () => {
+    setClosing(true);
+    setTimeout(onClose, 240);
+  };
+
+  const optionSets = {
+    template: [
+      { k: "modern", l: "Modern", d: "متوازن وواضح للوظائف التقنية والإدارية." },
+      { k: "classic", l: "Classic", d: "تقليدي وهادئ، مناسب للتقديم الرسمي." },
+      { k: "minimal", l: "Minimal", d: "مختصر ونظيف عندما تريد إبراز المحتوى فقط." },
+    ],
+    size: [
+      { k: "sm", l: "صغير", d: "يعطي مساحة أكبر عندما تكون السيرة مليئة بالتفاصيل." },
+      { k: "md", l: "وسط", d: "الخيار الافتراضي والأكثر توازناً للقراءة." },
+      { k: "lg", l: "كبير", d: "أفضل للسير القصيرة أو عند التركيز على الوضوح." },
+    ],
+    spacing: [
+      { k: "compact", l: "مضغوط", d: "يجمع التفاصيل في مساحة أقل." },
+      { k: "comfy", l: "مريح", d: "توازن جيد بين الكثافة والوضوح." },
+      { k: "spacious", l: "واسع", d: "مساحات أكبر لسيرة قصيرة ومظهر أهدأ." },
+    ],
+  };
+
+  const values = { template, size: cvSize, spacing: cvSpacing };
+  const setters = { template: setTemplate, size: setCvSize, spacing: setCvSpacing };
 
   const OptionsPanel = (
     <div className="m-preview-options">
@@ -791,52 +870,51 @@ function MobilePreview({ data, template, setTemplate, cvSize, setCvSize, cvSpaci
         <button className={activeTab==="spacing"?"active":""} onClick={()=>setActiveTab("spacing")}>المسافات</button>
       </div>
       <div className="m-opts-content">
-        {activeTab === "template" && (
-          <div className="m-preview-tpl">
-            {[ {k:"classic", l:"Classic"}, {k:"modern", l:"Modern"}, {k:"minimal", l:"Minimal"} ].map(t => (
-              <button key={t.k} className={template === t.k ? "active" : ""} onClick={() => setTemplate(t.k)}>{t.l}</button>
-            ))}
-          </div>
-        )}
-        {activeTab === "size" && (
-          <div className="m-preview-tpl">
-            <button className={cvSize==="small"?"active":""} onClick={()=>setCvSize("small")}>صغير</button>
-            <button className={cvSize==="medium"?"active":""} onClick={()=>setCvSize("medium")}>وسط</button>
-            <button className={cvSize==="large"?"active":""} onClick={()=>setCvSize("large")}>كبير</button>
-          </div>
-        )}
-        {activeTab === "spacing" && (
-          <div className="m-preview-tpl">
-            <button className={cvSpacing==="compact"?"active":""} onClick={()=>setCvSpacing("compact")}>مضغوط</button>
-            <button className={cvSpacing==="comfy"?"active":""} onClick={()=>setCvSpacing("comfy")}>مريح</button>
-            <button className={cvSpacing==="spacious"?"active":""} onClick={()=>setCvSpacing("spacious")}>واسع</button>
-          </div>
-        )}
+        <div className="m-preview-choice-grid">
+          {optionSets[activeTab].map(opt => (
+            <button key={opt.k}
+                    className={"m-preview-choice" + (values[activeTab] === opt.k ? " active" : "")}
+                    onClick={() => setters[activeTab](opt.k)}>
+              <span className="m-choice-title">{opt.l}</span>
+              <span className="m-choice-desc">{opt.d}</span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
 
   return (
-    <div className="m-preview mobile-only">
+    <div className={"m-preview mobile-only" + (closing ? " closing" : "")}>
       <div className="m-preview-header">
         <div className="t">معاينة وتخصيص</div>
-        <button className="btn btn-ghost btn-icon" onClick={onClose}><Icon name="x"/></button>
+        <button className="btn btn-ghost btn-icon" onClick={closePreview}><Icon name="x"/></button>
       </div>
       {OptionsPanel}
-      <div className="m-preview-scroll" ref={scrollRef} dir="ltr">
+      <div className="m-preview-hint">
+        <span><Icon name="zoomIn"/> كبّر بإصبعين أو Ctrl + عجلة الفارة، ثم اسحب للتنقل.</span>
+        <div className="m-preview-zoom">
+          <button onClick={() => zoomBy(-0.18)} disabled={userZoom <= 1.01} title="تصغير"><Icon name="minus"/></button>
+          <button onClick={resetZoom} title="ملاءمة الصفحة">{Math.round(userZoom * 100)}%</button>
+          <button onClick={() => zoomBy(0.18)} disabled={userZoom >= 3.19} title="تكبير"><Icon name="plus"/></button>
+        </div>
+      </div>
+      <div className="m-preview-scroll" ref={scrollRef} dir="ltr"
+           onTouchStart={handlePreviewTouchStart}
+           onTouchMove={handlePreviewTouchMove}
+           onTouchEnd={handlePreviewTouchEnd}
+           onTouchCancel={handlePreviewTouchEnd}
+           onWheel={handlePreviewWheel}>
         <div className="m-preview-a4-wrap" style={{
           position: "relative",
           width: `${794 * scale}px`,
           height: `${1123 * scale}px`,
-          overflow: "hidden"
+          overflow: "visible"
         }}>
           <div className={`a4 m-preview-a4 size-${cvSize} spacing-${cvSpacing}`} style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            transform: `scale(${scale})`,
-            transformOrigin: "top left"
-          }} dir="rtl">
+            position: "relative",
+            zoom: scale
+          }}>
             <CV data={data} sectionOrder={sectionOrder}/>
           </div>
         </div>

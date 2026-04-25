@@ -84,11 +84,11 @@ function SkillsSection({ data, setData }) {
 function ProjectsSection({ data, setData }) {
   const [openIdx, setOpenIdx] = useState(0);
   const items = data.projects || [];
-  const upd = (next) => setData({ ...data, projects: next });
+  const upd = (next) => setData(prev => ({ ...prev, projects: typeof next === "function" ? next(prev.projects || []) : next }));
   const add = () => { upd([...items, { title: "", role: "", start: "", end: "", bullets: [""] }]); setOpenIdx(items.length); };
   const remove = (i) => upd(items.filter((_, j) => j !== i));
   const move = (i, dir) => { const j = i+dir; if (j<0||j>=items.length) return; const n=[...items]; [n[i],n[j]]=[n[j],n[i]]; upd(n); };
-  const update = (i, patch) => upd(items.map((s, j) => j === i ? { ...s, ...patch } : s));
+  const update = (i, patch) => upd(prev => prev.map((s, j) => j === i ? { ...s, ...patch } : s));
 
   return (
     <>
@@ -126,11 +126,11 @@ function ProjectsSection({ data, setData }) {
 function ExperienceSection({ data, setData }) {
   const [openIdx, setOpenIdx] = useState(0);
   const items = data.experience || [];
-  const upd = (next) => setData({ ...data, experience: next });
+  const upd = (next) => setData(prev => ({ ...prev, experience: typeof next === "function" ? next(prev.experience || []) : next }));
   const add = () => { upd([...items, { company: "", role: "", location: "", start: "", end: "", bullets: [""] }]); setOpenIdx(items.length); };
   const remove = (i) => upd(items.filter((_, j) => j !== i));
   const move = (i, dir) => { const j=i+dir; if(j<0||j>=items.length)return; const n=[...items]; [n[i],n[j]]=[n[j],n[i]]; upd(n); };
-  const update = (i, patch) => upd(items.map((s, j) => j === i ? { ...s, ...patch } : s));
+  const update = (i, patch) => upd(prev => prev.map((s, j) => j === i ? { ...s, ...patch } : s));
   return (
     <>
       {items.map((p, i) => (
@@ -165,11 +165,11 @@ function ExperienceSection({ data, setData }) {
 function EducationSection({ data, setData }) {
   const [openIdx, setOpenIdx] = useState(0);
   const items = data.education || [];
-  const upd = (next) => setData({ ...data, education: next });
+  const upd = (next) => setData(prev => ({ ...prev, education: typeof next === "function" ? next(prev.education || []) : next }));
   const add = () => { upd([...items, { school: "", degree: "", location: "", start: "", end: "", bullets: [""] }]); setOpenIdx(items.length); };
   const remove = (i) => upd(items.filter((_, j) => j !== i));
   const move = (i, dir) => { const j=i+dir; if(j<0||j>=items.length)return; const n=[...items]; [n[i],n[j]]=[n[j],n[i]]; upd(n); };
-  const update = (i, patch) => upd(items.map((s, j) => j === i ? { ...s, ...patch } : s));
+  const update = (i, patch) => upd(prev => prev.map((s, j) => j === i ? { ...s, ...patch } : s));
   return (
     <>
       {items.map((p, i) => (
@@ -204,11 +204,11 @@ function EducationSection({ data, setData }) {
 function CertificationsSection({ data, setData }) {
   const [openIdx, setOpenIdx] = useState(0);
   const items = data.certifications || [];
-  const upd = (next) => setData({ ...data, certifications: next });
+  const upd = (next) => setData(prev => ({ ...prev, certifications: typeof next === "function" ? next(prev.certifications || []) : next }));
   const add = () => { upd([...items, { title: "", issuer: "", date: "" }]); setOpenIdx(items.length); };
   const remove = (i) => upd(items.filter((_, j) => j !== i));
   const move = (i, dir) => { const j=i+dir; if(j<0||j>=items.length)return; const n=[...items]; [n[i],n[j]]=[n[j],n[i]]; upd(n); };
-  const update = (i, patch) => upd(items.map((s, j) => j === i ? { ...s, ...patch } : s));
+  const update = (i, patch) => upd(prev => prev.map((s, j) => j === i ? { ...s, ...patch } : s));
   return (
     <>
       {items.map((p, i) => (
@@ -233,11 +233,11 @@ function CertificationsSection({ data, setData }) {
 function AwardsSection({ data, setData }) {
   const [openIdx, setOpenIdx] = useState(0);
   const items = data.awards || [];
-  const upd = (next) => setData({ ...data, awards: next });
+  const upd = (next) => setData(prev => ({ ...prev, awards: typeof next === "function" ? next(prev.awards || []) : next }));
   const add = () => { upd([...items, { title: "", issuer: "", date: "", detail: "" }]); setOpenIdx(items.length); };
   const remove = (i) => upd(items.filter((_, j) => j !== i));
   const move = (i, dir) => { const j=i+dir; if(j<0||j>=items.length)return; const n=[...items]; [n[i],n[j]]=[n[j],n[i]]; upd(n); };
-  const update = (i, patch) => upd(items.map((s, j) => j === i ? { ...s, ...patch } : s));
+  const update = (i, patch) => upd(prev => prev.map((s, j) => j === i ? { ...s, ...patch } : s));
   return (
     <>
       {items.map((p, i) => (
@@ -263,11 +263,11 @@ function AwardsSection({ data, setData }) {
 function VolunteeringSection({ data, setData }) {
   const [openIdx, setOpenIdx] = useState(0);
   const items = data.volunteering || [];
-  const upd = (next) => setData({ ...data, volunteering: next });
+  const upd = (next) => setData(prev => ({ ...prev, volunteering: typeof next === "function" ? next(prev.volunteering || []) : next }));
   const add = () => { upd([...items, { org: "", role: "", date: "", bullets: [""] }]); setOpenIdx(items.length); };
   const remove = (i) => upd(items.filter((_, j) => j !== i));
   const move = (i, dir) => { const j=i+dir; if(j<0||j>=items.length)return; const n=[...items]; [n[i],n[j]]=[n[j],n[i]]; upd(n); };
-  const update = (i, patch) => upd(items.map((s, j) => j === i ? { ...s, ...patch } : s));
+  const update = (i, patch) => upd(prev => prev.map((s, j) => j === i ? { ...s, ...patch } : s));
   return (
     <>
       {items.map((p, i) => (

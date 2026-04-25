@@ -44,6 +44,7 @@ function Portal({ children }) {
 /* Inline trigger: shows chosen date as a big pill, clicking opens the modal/sheet */
 function DatePicker({ start, end, onStart, onEnd, present, onPresent }) {
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.matchMedia("(max-width: 900px)").matches);
 
   useEffect(() => {
@@ -59,6 +60,13 @@ function DatePicker({ start, end, onStart, onEnd, present, onPresent }) {
     return { sText, eText };
   };
   const { sText, eText } = summary();
+  const closePicker = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setOpen(false);
+      setClosing(false);
+    }, 220);
+  };
 
   return (
     <>
@@ -82,10 +90,10 @@ function DatePicker({ start, end, onStart, onEnd, present, onPresent }) {
           {isMobile
             ? <DateSheetMobile start={start} end={end} present={present}
                                onStart={onStart} onEnd={onEnd} onPresent={onPresent}
-                               onClose={() => setOpen(false)}/>
+                               closing={closing} onClose={closePicker}/>
             : <DateModalDesktop start={start} end={end} present={present}
                                 onStart={onStart} onEnd={onEnd} onPresent={onPresent}
-                                onClose={() => setOpen(false)}/>
+                                closing={closing} onClose={closePicker}/>
           }
         </Portal>
       )}
@@ -93,8 +101,203 @@ function DatePicker({ start, end, onStart, onEnd, present, onPresent }) {
   );
 }
 
+function SingleDatePicker({ value, onChange }) {
+  const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.matchMedia("(max-width: 900px)").matches);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 900px)");
+    const h = () => setIsMobile(mq.matches);
+    mq.addEventListener?.("change", h);
+    return () => mq.removeEventListener?.("change", h);
+  }, []);
+
+  const closePicker = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setOpen(false);
+      setClosing(false);
+    }, 220);
+  };
+
+  return (
+    <>
+      <button type="button" className={"single-date-trigger" + (value ? " filled" : "")}
+              onClick={() => setOpen(true)}>
+        <span className="single-date-main">
+          <span className="date-trigger-label">التاريخ</span>
+          <span className="date-trigger-value">{value || "—"}</span>
+        </span>
+        <span className="date-trigger-edit" aria-hidden><Icon name="calendar"/></span>
+      </button>
+      {open && (
+        <Portal>
+          {isMobile
+            ? <SingleDateSheetMobile value={value} onChange={onChange} closing={closing} onClose={closePicker}/>
+            : <SingleDateModalDesktop value={value} onChange={onChange} closing={closing} onClose={closePicker}/>
+          }
+        </Portal>
+      )}
+    </>
+  );
+}
+
+function SingleDateModalDesktop({ value, onChange, onClose, closing }) {
+  const [cal, setCal] = useState("gregorian");
+  const [yearPickerOpen, setYearPickerOpen] = useState(false);
+  const [local, setLocal] = useState(parseToken(value));
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const months = cal === "gregorian" ? G_MONTHS_FULL : H_MONTHS_FULL;
+  const thisYear = new Date().getFullYear();
+  const years = cal === "gregorian"
+    ? Array.from({length: 30}, (_, i) => thisYear + 2 - i)
+    : Array.from({length: 30}, (_, i) => 1448 - i);
+  const fallbackYear = cal === "gregorian" ? thisYear : 1446;
+
+  const commit = () => {
+    onChange(formatToken(local.m, local.y));
+    onClose();
+  };
+
+  return (
+    <div className={"dm-backdrop" + (closing ? " closing" : "")} onClick={onClose}>
+      <div className={"dm-modal single-date-modal" + (closing ? " closing" : "")} onClick={e => e.stopPropagation()}>
+        <div className="dm-header">
+          <div className="dm-title">
+            <Icon name="calendar"/>
+            <span>اختر التاريخ</span>
+          </div>
+          <button className="dm-close" onClick={onClose}><Icon name="x"/></button>
+        </div>
+        <div className="dm-subhead">
+          <div className="dm-cal-tabs">
+            <button className={"dm-cal-tab" + (cal === "gregorian" ? " active" : "")} onClick={() => setCal("gregorian")}>ميلادي</button>
+            <button className={"dm-cal-tab" + (cal === "hijri" ? " active" : "")} onClick={() => setCal("hijri")}>هجري</button>
+          </div>
+          <div className="single-date-summary">{formatToken(local.m, local.y) || "لم يتم اختيار تاريخ"}</div>
+        </div>
+        <div className="dm-body">
+          <div className="dm-year-row">
+            <button className="dm-year-nav" onClick={() => setLocal(l => ({...l, y: String(parseInt(l.y || fallbackYear) - 1)}))}><Icon name="chevronR"/></button>
+            <button className="dm-year-display" onClick={() => setYearPickerOpen(true)}>
+              {local.y || fallbackYear}
+              <Icon name="chevronDown"/>
+            </button>
+            <button className="dm-year-nav" onClick={() => setLocal(l => ({...l, y: String(parseInt(l.y || fallbackYear) + 1)}))}><Icon name="chevronL"/></button>
+          </div>
+          <div className="dm-month-grid">
+            {months.map(m => (
+              <button key={m.k} type="button"
+                className={"dm-month-btn" + (local.m === m.k ? " active" : "")}
+                onClick={() => setLocal(l => ({...l, m: m.k}))}>
+                <span className="dm-month-k">{m.k}</span>
+                <span className="dm-month-n">{m.n}</span>
+              </button>
+            ))}
+          </div>
+          {yearPickerOpen && (
+            <div className="dm-year-overlay" onClick={() => setYearPickerOpen(false)}>
+              <div className="dm-year-grid" onClick={e => e.stopPropagation()}>
+                {years.map(y => (
+                  <button key={y} type="button"
+                    className={"dm-year-item" + (String(local.y) === String(y) ? " active" : "") + (y === thisYear && cal === "gregorian" ? " current" : "")}
+                    onClick={() => { setLocal(l => ({...l, y: String(y)})); setYearPickerOpen(false); }}>
+                    {y}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="dm-footer">
+          <button className="dm-clear-btn" onClick={() => setLocal({m:"", y:""})}>مسح</button>
+          <div className="dm-footer-actions">
+            <button className="btn btn-secondary" onClick={onClose}>إلغاء</button>
+            <button className="btn btn-primary" onClick={commit}><Icon name="check"/> حفظ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SingleDateSheetMobile({ value, onChange, onClose, closing }) {
+  const [cal, setCal] = useState("gregorian");
+  const [local, setLocal] = useState(parseToken(value));
+  const months = cal === "gregorian" ? G_MONTHS_FULL : H_MONTHS_FULL;
+  const thisYear = new Date().getFullYear();
+  const years = cal === "gregorian"
+    ? Array.from({length: 30}, (_, i) => thisYear + 2 - i)
+    : Array.from({length: 30}, (_, i) => 1448 - i);
+  const fallbackYear = cal === "gregorian" ? thisYear : 1446;
+
+  const commit = () => {
+    onChange(formatToken(local.m, local.y));
+    onClose();
+  };
+
+  return (
+    <div className={"ds-backdrop" + (closing ? " closing" : "")} onClick={onClose}>
+      <div className={"ds-sheet single-date-sheet" + (closing ? " closing" : "")} onClick={e => e.stopPropagation()}>
+        <div className="ds-handle"/>
+        <div className="ds-header">
+          <div className="ds-title">اختر التاريخ</div>
+          <button className="ds-close" onClick={onClose}><Icon name="x"/></button>
+        </div>
+        <div className="ds-cal-tabs">
+          <button className={"ds-cal-tab" + (cal === "gregorian" ? " active" : "")} onClick={() => setCal("gregorian")}>ميلادي</button>
+          <button className={"ds-cal-tab" + (cal === "hijri" ? " active" : "")} onClick={() => setCal("hijri")}>هجري</button>
+        </div>
+        <div className="ds-single-summary">{formatToken(local.m, local.y) || "لم يتم اختيار تاريخ"}</div>
+        <div className="ds-body">
+          <div className="ds-year-row">
+            <button onClick={() => setLocal(l => ({...l, y: String(parseInt(l.y || fallbackYear) - 1)}))}>
+              <Icon name="chevronR"/>
+            </button>
+            <div className="ds-year-val">{local.y || fallbackYear}</div>
+            <button onClick={() => setLocal(l => ({...l, y: String(parseInt(l.y || fallbackYear) + 1)}))}>
+              <Icon name="chevronL"/>
+            </button>
+          </div>
+          <div className="ds-month-grid">
+            {months.map(m => (
+              <button key={m.k} type="button"
+                className={"ds-month-btn" + (local.m === m.k ? " active" : "")}
+                onClick={() => setLocal(l => ({...l, m: m.k}))}>
+                <span className="ds-month-k">{m.k}</span>
+                <span className="ds-month-n">{m.n}</span>
+              </button>
+            ))}
+          </div>
+          <div className="ds-year-list-label">أو اختر السنة:</div>
+          <div className="ds-year-list">
+            {years.map(y => (
+              <button key={y} type="button"
+                className={"ds-year-chip" + (String(local.y) === String(y) ? " active" : "")}
+                onClick={() => setLocal(l => ({...l, y: String(y)}))}>
+                {y}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="ds-footer">
+          <button className="ds-clear" onClick={() => setLocal({m:"", y:""})}>مسح</button>
+          <button className="btn btn-primary ds-save" onClick={commit}>حفظ</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ========= Desktop modal ========= */
-function DateModalDesktop({ start, end, present, onStart, onEnd, onPresent, onClose }) {
+function DateModalDesktop({ start, end, present, onStart, onEnd, onPresent, onClose, closing }) {
   const [cal, setCal] = useState("gregorian");
   const [active, setActive] = useState("start");
   const [yearPickerFor, setYearPickerFor] = useState(null);
@@ -125,9 +328,9 @@ function DateModalDesktop({ start, end, present, onStart, onEnd, onPresent, onCl
   const commit = () => {
     onStart(formatToken(local.start.m, local.start.y));
     if (local.present) {
-      onEnd("Present"); onPresent(true);
+      onEnd("Present");
     } else {
-      onEnd(formatToken(local.end.m, local.end.y)); onPresent(false);
+      onEnd(formatToken(local.end.m, local.end.y));
     }
     onClose();
   };
@@ -141,8 +344,8 @@ function DateModalDesktop({ start, end, present, onStart, onEnd, onPresent, onCl
   };
 
   return (
-    <div className="dm-backdrop" onClick={onClose}>
-      <div className="dm-modal" onClick={e => e.stopPropagation()}>
+    <div className={"dm-backdrop" + (closing ? " closing" : "")} onClick={onClose}>
+      <div className={"dm-modal" + (closing ? " closing" : "")} onClick={e => e.stopPropagation()}>
         <div className="dm-header">
           <div className="dm-title">
             <Icon name="calendar"/>
@@ -226,7 +429,7 @@ function DateModalDesktop({ start, end, present, onStart, onEnd, onPresent, onCl
 }
 
 /* ========= Mobile bottom sheet ========= */
-function DateSheetMobile({ start, end, present, onStart, onEnd, onPresent, onClose }) {
+function DateSheetMobile({ start, end, present, onStart, onEnd, onPresent, onClose, closing }) {
   const [cal, setCal] = useState("gregorian");
   const [active, setActive] = useState("start");
   const [local, setLocal] = useState({
@@ -245,8 +448,8 @@ function DateSheetMobile({ start, end, present, onStart, onEnd, onPresent, onClo
 
   const commit = () => {
     onStart(formatToken(local.start.m, local.start.y));
-    if (local.present) { onEnd("Present"); onPresent(true); }
-    else { onEnd(formatToken(local.end.m, local.end.y)); onPresent(false); }
+    if (local.present) { onEnd("Present"); }
+    else { onEnd(formatToken(local.end.m, local.end.y)); }
     onClose();
   };
 
@@ -258,8 +461,8 @@ function DateSheetMobile({ start, end, present, onStart, onEnd, onPresent, onClo
   };
 
   return (
-    <div className="ds-backdrop" onClick={onClose}>
-      <div className="ds-sheet" onClick={e => e.stopPropagation()}>
+    <div className={"ds-backdrop" + (closing ? " closing" : "")} onClick={onClose}>
+      <div className={"ds-sheet" + (closing ? " closing" : "")} onClick={e => e.stopPropagation()}>
         <div className="ds-handle"/>
         <div className="ds-header">
           <div className="ds-title">اختر المدة</div>
@@ -332,8 +535,27 @@ function DateSheetMobile({ start, end, present, onStart, onEnd, onPresent, onClo
 
 /* ========= Item card ========= */
 function ItemCard({ open, onToggle, onDelete, onMoveUp, onMoveDown, isFirst, isLast, title, subtitle, children }) {
+  const [renderBody, setRenderBody] = useState(open);
+  const [closing, setClosing] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setRenderBody(true);
+      setClosing(false);
+      return;
+    }
+    if (renderBody) {
+      setClosing(true);
+      const timer = setTimeout(() => {
+        setRenderBody(false);
+        setClosing(false);
+      }, 220);
+      return () => clearTimeout(timer);
+    }
+  }, [open, renderBody]);
+
   return (
-    <div className={"item-card" + (open ? " open" : "")}>
+    <div className={"item-card" + (open ? " open" : "") + (closing ? " closing" : "")}>
       <div className="item-header" onClick={onToggle}>
         <Icon name="grip" className="drag-handle"/>
         <div className="item-title">
@@ -347,7 +569,7 @@ function ItemCard({ open, onToggle, onDelete, onMoveUp, onMoveDown, isFirst, isL
           <button className="item-action-btn" onClick={onToggle}><Icon name="chevron" className="chevron"/></button>
         </div>
       </div>
-      {open && <div className="item-body">{children}</div>}
+      {renderBody && <div className={"item-body" + (closing ? " closing" : "")}>{children}</div>}
     </div>
   );
 }
