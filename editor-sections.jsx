@@ -16,7 +16,7 @@ function PersonalSection({ data, setData }) {
       </Field>
       <FieldRow>
         <Field label="البريد الإلكتروني"><input className="input ltr" dir="ltr" placeholder="you@example.com" value={data.email} onChange={e => upd("email", e.target.value)}/></Field>
-        <Field label="رقم الجوال"><input className="input ltr" dir="ltr" placeholder="+966 50 000 0000" value={data.phone} onChange={e => upd("phone", e.target.value)}/></Field>
+        <Field label="رقم الجوال"><input className="input ltr" dir="ltr" placeholder="0599999999" value={data.phone} onChange={e => upd("phone", e.target.value)}/></Field>
       </FieldRow>
       <FieldRow>
         <Field label="رابط تواصل" hint="LinkedIn, GitHub, X…">

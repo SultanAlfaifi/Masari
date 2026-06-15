@@ -32,6 +32,392 @@
   --ease: cubic-bezier(.22,.61,.36,1);
 }
 
+/* ============ Temporary Saudi NT support theme ============ */
+html[data-theme="saudi-nt"] {
+  --bg: #f7fbf8;
+  --panel: #ffffff;
+  --panel-2: #f1f8f4;
+  --surface-soft: #e8f3ed;
+  --border: #d3e6da;
+  --border-strong: #a9cbb8;
+  --text: #062d1b;
+  --text-2: #2b5740;
+  --text-3: #6d8878;
+  --accent: #007a3d;
+  --accent-hover: #005f30;
+  --accent-soft: #dff5e8;
+  --accent-ink: #004926;
+  --danger: #b42318;
+  --success: #008f4d;
+  --preview-bg: #e8f4ed;
+}
+
+html[data-theme="saudi-nt"] body {
+  background:
+    linear-gradient(135deg, rgba(0,122,61,.045), rgba(255,255,255,.82) 38%, rgba(214,177,83,.055)),
+    var(--bg);
+}
+
+html[data-theme="saudi-nt"] .app {
+  background:
+    linear-gradient(120deg, rgba(0,122,61,.045), transparent 32%),
+    var(--bg);
+}
+
+html[data-theme="saudi-nt"] .topbar {
+  background:
+    linear-gradient(90deg, rgba(0,122,61,.08), transparent 34%, rgba(214,177,83,.08)),
+    #ffffff;
+  border-bottom-color: rgba(0,73,38,.16);
+  box-shadow: 0 10px 30px -26px rgba(0,73,38,.46);
+}
+
+html[data-theme="saudi-nt"] .brand {
+  gap: 12px;
+  flex: 1 1 auto;
+}
+
+html[data-theme="saudi-nt"] .brand-mark {
+  width: 38px;
+  height: 38px;
+  padding: 4px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 20px -12px rgba(0,0,0,.36);
+  overflow: hidden;
+}
+
+html[data-theme="saudi-nt"] .brand-mark img {
+  width: 100%;
+  height: 92%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  transform: translateY(-2px);
+  transform-origin: center;
+}
+
+html[data-theme="saudi-nt"] .brand-text {
+  color: var(--accent-ink);
+}
+
+html[data-theme="saudi-nt"] .brand-name,
+html[data-theme="saudi-nt"] .brand-sub {
+  color: var(--accent-ink);
+}
+
+html[data-theme="saudi-nt"] .brand-sub {
+  padding-right: 0;
+  margin-right: 0;
+  border-right: 0;
+  opacity: .82;
+}
+
+html[data-theme="saudi-nt"] .seasonal-topline {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-inline-start: 18px;
+  margin-inline-end: auto;
+  padding: 7px 16px;
+  min-width: 330px;
+  border: 1px solid rgba(0,73,38,.20);
+  border-radius: 999px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #004926, #007a3d);
+  box-shadow: 0 12px 26px -20px rgba(0,73,38,.65), inset 0 1px 0 rgba(255,255,255,.18);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+html[data-theme="saudi-nt"] .seasonal-topline b {
+  color: #f4d56f;
+  font-weight: 800;
+}
+
+html[data-theme="saudi-nt"] .topbar-creator {
+  display: none;
+}
+
+html[data-theme="saudi-nt"] .btn-primary,
+html[data-theme="saudi-nt"] .stepper-btn.primary,
+html[data-theme="saudi-nt"] .c-btn-row button.active {
+  background: linear-gradient(180deg, #008f4d, #005f30);
+  box-shadow: 0 10px 22px -14px rgba(0,95,48,.8);
+}
+
+html[data-theme="saudi-nt"] .btn-primary:hover {
+  box-shadow: 0 14px 28px -16px rgba(0,95,48,.85);
+}
+
+html[data-theme="saudi-nt"] .nav-item.active,
+html[data-theme="saudi-nt"] .guide-btn,
+html[data-theme="saudi-nt"] .date-trigger-edit {
+  background: rgba(0,122,61,.09);
+}
+
+html[data-theme="saudi-nt"] .ats-badge {
+  background: #f5fbf7;
+  border-color: rgba(0,122,61,.16);
+  color: #004926;
+}
+
+html[data-theme="saudi-nt"] .progress-fill {
+  background: linear-gradient(90deg, #007a3d, #d6b153);
+}
+
+html[data-theme="saudi-nt"] .preview-scroll {
+  background:
+    linear-gradient(rgba(232,244,237,.90), rgba(232,244,237,.90)),
+    radial-gradient(circle at 1px 1px, rgba(0,73,38,.12) 1px, transparent 1px);
+  background-size: auto, 18px 18px;
+}
+
+html[data-theme="saudi-nt"] .template-info-banner {
+  background: #f6fbf8;
+}
+
+html[data-theme="saudi-nt"] .bitaqa-card {
+  background: linear-gradient(135deg, #043f25, #006f39 68%, #0b4b2e);
+  border-color: rgba(0,73,38,.20);
+  box-shadow: 0 12px 24px -18px rgba(0,73,38,.70);
+}
+
+html[data-theme="saudi-nt"] .bitaqa-shine {
+  top: -48%;
+  right: -28%;
+  width: 145%;
+  height: 210%;
+  background: radial-gradient(circle at 28% 20%, rgba(244,213,111,.18), transparent 40%);
+}
+
+html[data-theme="saudi-nt"] .bitaqa-logo {
+  background: rgba(244,213,111,.18);
+  border: 1px solid rgba(244,213,111,.36);
+}
+
+html[data-theme="saudi-nt"] .bitaqa-new {
+  color: #004926;
+  background: #f4d56f;
+  box-shadow: 0 6px 14px -10px rgba(0,0,0,.55);
+}
+
+html[data-theme="saudi-nt"] .bitaqa-cta {
+  background: rgba(255,255,255,.12);
+  border-color: rgba(244,213,111,.38);
+}
+
+html[data-theme="saudi-nt"] .bitaqa-card:hover .bitaqa-cta {
+  background: rgba(244,213,111,.20);
+}
+
+.saudi-support-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 66px;
+  gap: 14px;
+  align-items: center;
+  min-height: 116px;
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 16px;
+  direction: ltr;
+  background:
+    linear-gradient(90deg, rgba(0,73,38,.92), rgba(0,122,61,.66) 58%, rgba(255,255,255,.88)),
+    url("assets/saudi-nt-team.jpg") center / cover;
+  box-shadow: 0 18px 36px -28px rgba(0,73,38,.50);
+}
+
+.saudi-support-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0,73,38,.88), rgba(0,122,61,.48) 58%, rgba(255,255,255,.80) 100%),
+    linear-gradient(180deg, rgba(255,255,255,0), rgba(0,73,38,.12));
+}
+
+.saudi-support-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.22);
+}
+
+.saudi-support-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.saudi-support-media {
+  grid-column: 2;
+  grid-row: 1;
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.96);
+  border: 1px solid rgba(255,255,255,.42);
+  box-shadow: 0 14px 26px -20px rgba(0,0,0,.40);
+  justify-self: center;
+  align-self: center;
+  overflow: hidden;
+}
+
+.saudi-support-media img {
+  width: 100%;
+  height: 92%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  transform: translateY(-3px);
+  transform-origin: center;
+}
+
+.saudi-support-copy {
+  grid-column: 1;
+  grid-row: 1;
+  color: #fff;
+  max-width: 460px;
+  direction: rtl;
+  text-align: center;
+  justify-self: end;
+}
+
+.saudi-support-kicker {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #ffeaa6;
+  background: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.20);
+  font-size: 10.5px;
+  font-weight: 800;
+}
+
+.saudi-support-copy h1 {
+  margin: 6px 0 0;
+  font-size: 23px;
+  line-height: 1.18;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.saudi-support-copy p {
+  display: none;
+}
+
+.saudi-support-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.saudi-support-tags span,
+.saudi-support-tags b {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.23);
+  background: rgba(255,255,255,.13);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 800;
+}
+
+.saudi-support-tags b {
+  color: #f7d568;
+  background: rgba(0,0,0,.18);
+}
+
+.saudi-support-tags span {
+  display: none;
+}
+
+html:not([data-theme="saudi-nt"]) .saudi-support-panel,
+html:not([data-theme="saudi-nt"]) .seasonal-topline {
+  display: none !important;
+}
+
+@media (max-width: 900px) {
+  html[data-theme="saudi-nt"] .topbar {
+    background:
+      linear-gradient(90deg, rgba(0,122,61,.10), rgba(255,255,255,.96) 42%, rgba(244,213,111,.12)),
+      #ffffff;
+    border-bottom-color: rgba(0,73,38,.16);
+    box-shadow: 0 8px 24px -22px rgba(0,73,38,.45);
+  }
+
+  html[data-theme="saudi-nt"] .brand-name {
+    color: var(--accent-ink);
+    font-weight: 800;
+  }
+
+  html[data-theme="saudi-nt"] .brand-sub {
+    display: none;
+  }
+
+  html[data-theme="saudi-nt"] .brand-mark {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(0,122,61,.12);
+    box-shadow: 0 10px 22px -16px rgba(0,73,38,.55);
+  }
+
+  .saudi-support-panel {
+    grid-template-columns: 1fr 56px;
+    gap: 12px;
+    min-height: 122px;
+    margin-bottom: 16px;
+    padding: 14px;
+    border-radius: 14px;
+    background-position: center;
+  }
+
+  .saudi-support-media {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    padding: 7px;
+  }
+
+  .saudi-support-copy h1 {
+    font-size: 20px;
+    white-space: normal;
+  }
+
+  .saudi-support-copy p {
+    display: none;
+  }
+
+  .saudi-support-tags {
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .saudi-support-tags span,
+  .saudi-support-tags b {
+    min-height: 24px;
+    padding: 4px 8px;
+    font-size: 10.5px;
+  }
+}
+
 /* Reset */
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0;padding:0}

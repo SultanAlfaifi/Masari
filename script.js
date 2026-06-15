@@ -647,7 +647,7 @@ function closeResetModal() {
 }
 function confirmReset() {
     const dummyData = {
-        personal: { name: "Sultan Abdullah AlFaifi", highlights: "KAUST AI Program | McKinsey Forward Fellow | SCE Member", phone: "+966 50 399 0106", email: "sultan@example.com", social: "https://www.linkedin.com/in/alfaifi-sultan", location: "Makkah, KSA" },
+        personal: { name: "Sultan Abdullah AlFaifi", highlights: "KAUST AI Program | McKinsey Forward Fellow | SCE Member", phone: "0599999999", email: "sultan@example.com", social: "https://www.linkedin.com/in/alfaifi-sultan", location: "Makkah, KSA" },
         summary: "A passionate Software Engineer with a focus on building engaging and scalable applications. Experienced in modern web technologies, dedicated to solving complex problems and delivering high-quality solutions.",
         skills: [{ id: 101, category: "Languages", items: "Python\nJavaScript\nTypeScript\nJava" }, { id: 102, category: "Tools", items: "React\nNode.js\nGit\nDocker" }],
         projects: [{ id: 3, name: "Hajj & Umrah Guide App", date: "Mar. 2021 -- Nov. 2021", link: "https://github.com/sultan/hajj-app", items: "Built a cross-platform mobile application to assist pilgrims.\nIntegrated live maps and offline features for accessibility." }],

@@ -3,7 +3,7 @@ const DEMO = {
   name: "Sultan AlFaifi",
   highlights: "KAUST AI Program · McKinsey Forward Fellow · SCE Member",
   email: "sultan@example.com",
-  phone: "+966 50 399 0106",
+  phone: "0599999999",
   social: "linkedin.com/in/alfaifi-sultan",
   location: "Makkah, KSA",
   summary: "Software engineer with 5+ years building scalable web apps. I care about thoughtful UX, clean architecture, and shipping things people actually use.",

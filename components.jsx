@@ -2,12 +2,22 @@
 const { useState, useEffect, useRef, useMemo, useCallback } = React;
 
 function Topbar({ previewCollapsed, onTogglePreview, onDemo, onClear, onDownload, onMobilePreview, completion }) {
+  const eventConfig = window.MASARI_SEASONAL_EVENT;
+  const seasonalEvent = eventConfig?.enabled && eventConfig.activeTheme === "saudi-nt" ? eventConfig : null;
   return (
     <div className="topbar">
       <div className="brand">
-        <div className="brand-mark">م</div>
-        <div className="brand-name">مساري</div>
-        <div className="brand-sub">صانع السيرة الذاتية</div>
+        <div className="brand-mark">{seasonalEvent ? <img src="assets/saudi-football-logo.svg" alt="" /> : "م"}</div>
+        <div className="brand-text">
+          <div className="brand-name">مساري</div>
+          <div className="brand-sub">صانع السيرة الذاتية</div>
+        </div>
+        {seasonalEvent && (
+          <div className="seasonal-topline desktop-only">
+            <span>{seasonalEvent.tagline}</span>
+            <b dir="rtl">{seasonalEvent.hashtags[0]}</b>
+          </div>
+        )}
       </div>
       <div className="topbar-creator desktop-only">
         صُنع بشغف بواسطة <a href="https://www.linkedin.com/in/alfaifi-sultan" target="_blank" rel="noopener noreferrer">سلطان الفيفي</a>

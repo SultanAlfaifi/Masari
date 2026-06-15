@@ -19,6 +19,33 @@ const SECTION_COMPONENTS = {
   volunteering: VolunteeringSection,
 };
 
+function getSeasonalEvent() {
+  const event = window.MASARI_SEASONAL_EVENT;
+  return event && event.enabled && event.activeTheme === "saudi-nt" ? event : null;
+}
+
+function SaudiSupportPanel() {
+  const event = getSeasonalEvent();
+  if (!event) return null;
+
+  return (
+    <section className="saudi-support-panel" aria-label="دعم المنتخب السعودي">
+      <div className="saudi-support-media">
+        <img src="assets/saudi-football-logo.svg" alt="" />
+      </div>
+      <div className="saudi-support-copy">
+        <span className="saudi-support-kicker">دعمًا للمنتخب السعودي</span>
+        <h1>{event.title}</h1>
+        <p>{event.subtitle}</p>
+        <div className="saudi-support-tags">
+          <span>{event.tagline}</span>
+          {event.hashtags.map(tag => <b key={tag} dir={tag.includes("FIFA") ? "ltr" : "rtl"}>{tag}</b>)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function computeCompletion(data) {
   let filled = 0, total = 0;
   const check = (v) => { total++; if (v && String(v).trim()) filled++; };
@@ -29,6 +56,12 @@ function computeCompletion(data) {
   total++; if (data.education?.length > 0) filled++;
   total++; if (data.projects?.length > 0) filled++;
   return Math.min(100, (filled / total) * 100);
+}
+
+function migrateDemoPhone(data) {
+  if (!data) return data;
+  const oldDemoPhones = new Set(["+966 50 399 0106", "+966 50 000 0000"]);
+  return oldDemoPhones.has(data.phone) ? { ...data, phone: "0599999999" } : data;
 }
 
 /* Ensure pinned sections (personal) stay at top of order */
@@ -43,7 +76,7 @@ function normalizeOrder(order) {
 function App() {
   const [confirmDialog, setConfirmDialog] = useState({ isOpen: false });
   const [data, setData] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("masari_data_v2")) || DEMO; } catch { return DEMO; }
+    try { return migrateDemoPhone(JSON.parse(localStorage.getItem("masari_data_v2"))) || DEMO; } catch { return DEMO; }
   });
   const [current, setCurrent] = useState(() => localStorage.getItem("masari_section_v2") || "personal");
   const [template, setTemplate] = useState(() => localStorage.getItem("masari_template_v2") || "modern");
@@ -143,8 +176,11 @@ function App() {
     });
   };
 
-  // Lock conservative theme
-  useEffect(() => { document.documentElement.dataset.theme = "conservative"; }, []);
+  // Theme is configurable so temporary campaigns can be disabled without deleting the original design.
+  useEffect(() => {
+    const event = getSeasonalEvent();
+    document.documentElement.dataset.theme = event?.activeTheme || "conservative";
+  }, []);
 
   const counts = useMemo(() => ({
     skills: data.skills?.length || 0,
@@ -525,6 +561,7 @@ function App() {
 
         <main className="editor" key={current}>
           <div className="editor-inner section-enter">
+            <SaudiSupportPanel />
             <div className="editor-heading">
               <h2>{currentMeta?.label}</h2>
               <span className="step-meta">{String(idx + 1).padStart(2,"0")} / {String(orderedSections.length).padStart(2,"0")}</span>
